@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>New card</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div #reader id="reader" [class.reader]="isScanning"></div>
+  <div id="input" [class.input]="isScanning">
+    <ion-input
+      label="Card number"
+      label-placement="floating"
+      fill="outline"
+      value="{{ cardNumber }}"
+    ></ion-input>
+    <ion-input
+      label="Card name"
+      label-placement="floating"
+      fill="outline"
+      value="{{ cardName }}"
+    ></ion-input>
+  </div>
+  <div class="controls">
+    @if(isScanning) {
+    <ion-button color="danger" (click)="stopScan()" [disabled]="!isScanning"
+      >Cancel</ion-button
+    >
+    } @else {
+    <ion-button color="primary" (click)="test()" [disabled]="isScanning"
+      >Scan card</ion-button
+    >
+
+    }
+  </div>
+</ion-content>
