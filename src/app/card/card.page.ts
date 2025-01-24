@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  IonAlert,
   IonButton,
   IonContent,
   IonHeader,
@@ -37,9 +38,11 @@ import { Platform } from '@ionic/angular';
     IonInput,
     IonSelect,
     IonSelectOption,
+    IonAlert,
   ],
 })
 export class CardPage implements OnInit {
+  deleteAlert = false;
   loaded = false;
   card: Card = {
     name: '',
@@ -72,6 +75,18 @@ export class CardPage implements OnInit {
       throw new Error('Card not found');
     }
   }
+
+  public deleteButtons = [
+    {
+      text: 'Cancel',
+    },
+    {
+      text: 'OK',
+      handler: () => {
+        this.delete();
+      },
+    },
+  ];
 
   private generateBarcode(): void {
     setTimeout(() => {
@@ -108,7 +123,7 @@ export class CardPage implements OnInit {
   }
   generateImage(card: Card): void {
     this.card = card;
-    this.card.format = this.card.format ? this.card.format : 'EAN13';
+    this.card.format = this.card.format ? this.card.format : 'QRCODE';
 
     if (this.card.format === 'QRCODE') {
       this.generateQRCode();

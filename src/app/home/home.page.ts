@@ -9,7 +9,7 @@ import { StorageService } from '../services/storage.service';
 import { Card } from '../interfaces/card';
 import { CardComponent } from '../components/card/card.component';
 import { Platform } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -18,12 +18,11 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
   constructor(
-    private router: Router,
     private storageService: StorageService,
     private platform: Platform
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/home']);
+      App.exitApp();
     });
   }
   cards: Card[] = [];

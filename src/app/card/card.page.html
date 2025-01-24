@@ -37,13 +37,13 @@
         label="Card format"
         (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
       >
-        <ion-select-option value="EAN13" selected>EAN-13</ion-select-option>
+        <ion-select-option value="EAN13">EAN-13</ion-select-option>
         <ion-select-option value="CODE39">CODE-39</ion-select-option>
         <ion-select-option value="QRCODE">QR-CODE</ion-select-option>
       </ion-select>
     </div>
     <div class="btn-container">
-      <ion-button color="danger" (click)="delete()">Delete</ion-button>
+      <ion-button color="danger" id="delete">Delete</ion-button>
       <ion-button
         color="primary"
         (click)="editCard(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
@@ -56,4 +56,9 @@
     </div>
     }
   </div>
+  <ion-alert
+    trigger="delete"
+    header="Are you sure you want to delete this card?"
+    [buttons]="deleteButtons"
+  ></ion-alert>
 </ion-content>

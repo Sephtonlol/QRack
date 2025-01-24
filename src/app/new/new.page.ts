@@ -48,9 +48,8 @@ export class NewPage implements OnInit {
   card: Card = {
     name: '',
     number: '',
-    format: 'EAN13',
+    format: 'QRCODE',
   };
-  test: string = 'test';
 
   constructor(
     private router: Router,
@@ -123,7 +122,12 @@ export class NewPage implements OnInit {
     this.card.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     this.card.number = number;
     this.card.format = format;
-    this.storageService.setCard(this.card);
+    await this.storageService.setCard(this.card);
+    this.card = {
+      name: '',
+      number: '',
+      format: this.card.format,
+    };
   }
 
   async ngOnInit() {
