@@ -9,9 +9,16 @@ import {
   IonButton,
   IonModal,
   IonInput,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { StorageService } from '../services/storage.service';
+import { Card } from '../interfaces/card';
+
+import { Camera } from '@capacitor/camera';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-new',
@@ -27,6 +34,8 @@ import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
     FormsModule,
     IonButton,
     IonInput,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class NewPage implements OnInit {
@@ -35,20 +44,22 @@ export class NewPage implements OnInit {
   html5QrCode: Html5Qrcode | null = null;
   isScanning: boolean = false;
 
-  cardName: string = '';
-  cardNumber: string = '';
-  format!: string;
+  card: Card = {
+    name: '',
+    number: '',
+    format: 'EAN13',
+  };
+  test: string = 'test';
 
-  constructor() {}
+  constructor(private storageService: StorageService) {}
 
-  async test() {
+  async startScan() {
     if (!this.html5QrCode) {
       this.html5QrCode = new Html5Qrcode(this.reader.nativeElement.id, {
         formatsToSupport: [
           Html5QrcodeSupportedFormats.QR_CODE,
-          Html5QrcodeSupportedFormats.CODE_128,
-          Html5QrcodeSupportedFormats.EAN_13,
           Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.EAN_13,
         ],
         verbose: false,
       });
@@ -57,19 +68,30 @@ export class NewPage implements OnInit {
     try {
       this.isScanning = true;
       const devices = await Html5Qrcode.getCameras();
-
       if (devices && devices.length) {
-        const cameraId = devices[0].id;
+        const mainRearCamera =
+          devices.find(
+            (device) =>
+              device.label.toLowerCase().includes('facing back') &&
+              device.label.includes('0')
+          ) ||
+          devices.find((device) =>
+            device.label.toLowerCase().includes('facing back')
+          );
+
+        const cameraId = mainRearCamera ? mainRearCamera.id : devices[0].id;
 
         await this.html5QrCode.start(
           { deviceId: { exact: cameraId } },
           {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
+            fps: 20,
+            qrbox: { width: 200, height: 200 },
+            aspectRatio: 1 / 1,
           },
           async (decodedText, decodedResult) => {
-            this.cardNumber = decodedText;
-            this.format = decodedResult.result.format?.toString() || '';
+            this.card.number = decodedText;
+            this.card.format =
+              decodedResult.result.format?.toString().replace(/_/g, '') || '';
             this.stopScan();
           },
           (errorMessage) => {}
@@ -88,11 +110,16 @@ export class NewPage implements OnInit {
     }
   }
 
-  confirm(name: string | undefined | null | number) {
-    console.log(name);
-    console.log(this.cardNumber);
-    console.log(this.format);
+  async addCard(name: string, number: string, format: string) {
+    this.card.name = name;
+    this.card.number = number;
+    this.card.format = format;
+    this.storageService.setCard(this.card);
   }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    if (Capacitor.getPlatform() !== 'web') {
+      const status = await Camera.requestPermissions();
+    }
+  }
 }

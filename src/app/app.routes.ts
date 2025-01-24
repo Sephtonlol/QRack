@@ -7,11 +7,15 @@ export const routes: Routes = [
   },
   {
     path: 'new',
-    loadComponent: () => import('./new/new.page').then( m => m.NewPage)
+    loadComponent: () => import('./new/new.page').then((m) => m.NewPage),
   },
   {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'card/:id',
+    loadComponent: () => import('./card/card.page').then((m) => m.CardPage),
   },
 ];

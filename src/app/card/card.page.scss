@@ -1,0 +1,13 @@
+ion-title {
+  text-transform: uppercase;
+}
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+canvas {
+  border-radius: 0.5rem;
+  max-width: 100%;
+}

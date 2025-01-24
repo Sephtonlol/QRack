@@ -1,0 +1,23 @@
+:host {
+  background-color: #1f1f1f;
+  height: 10rem;
+  display: block;
+  margin: 1rem;
+  border-radius: 1rem;
+}
+.text-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+a {
+  text-decoration: none;
+}
+h1 {
+  font-size: xx-large;
+  font-family: myFirstFont;
+  color: white;
+  font-weight: bolder;
+  text-transform: uppercase;
+}

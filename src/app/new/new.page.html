@@ -8,28 +8,51 @@
   <div #reader id="reader" [class.reader]="isScanning"></div>
   <div id="input" [class.input]="isScanning">
     <ion-input
+      #cardNumber
       label="Card number"
       label-placement="floating"
       fill="outline"
-      value="{{ cardNumber }}"
+      value="{{ card.number }}"
     ></ion-input>
     <ion-input
+      #cardName
       label="Card name"
       label-placement="floating"
       fill="outline"
-      value="{{ cardName }}"
+      value="{{ card.name }}"
     ></ion-input>
+    <ion-select
+      #cardFormat
+      aria-label="selected format"
+      value="{{ card.format }}"
+      label-placement="floating"
+      fill="outline"
+      label="Card format"
+    >
+      <ion-select-option value="EAN13" selected>EAN-13</ion-select-option>
+      <ion-select-option value="CODE39">CODE-39</ion-select-option>
+      <ion-select-option value="QRCODE">QR-CODE</ion-select-option>
+    </ion-select>
   </div>
   <div class="controls">
-    @if(isScanning) {
-    <ion-button color="danger" (click)="stopScan()" [disabled]="!isScanning"
-      >Cancel</ion-button
-    >
-    } @else {
-    <ion-button color="primary" (click)="test()" [disabled]="isScanning"
-      >Scan card</ion-button
-    >
+    <div class="btn-container">
+      @if(isScanning) {
+      <ion-button color="danger" (click)="stopScan()" [disabled]="!isScanning"
+        >Cancel</ion-button
+      >
+      } @else {
 
-    }
+      <ion-button color="primary" (click)="startScan()" [disabled]="isScanning"
+        >Scan card</ion-button
+      >
+      <ion-button
+        color="success"
+        (click)="addCard(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
+        [disabled]="isScanning"
+        >Save</ion-button
+      >
+
+      }
+    </div>
   </div>
 </ion-content>
