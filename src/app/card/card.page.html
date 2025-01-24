@@ -5,10 +5,55 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="card">
-    <canvas id="img"></canvas>
-  </div>
-  <div class="btn-container">
-    <ion-button color="danger" (click)="delete()">Delete</ion-button>
+  <div class="container">
+    <div class="card" [class.loaded]="loaded">
+      <canvas id="img"></canvas>
+    </div>
+
+    @if(loaded){
+    <div id="input">
+      <ion-input
+        #cardNumber
+        label="Card number"
+        label-placement="floating"
+        fill="outline"
+        value="{{ card.number }}"
+        (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
+      ></ion-input>
+      <ion-input
+        #cardName
+        label="Card name"
+        label-placement="floating"
+        fill="outline"
+        value="{{ card.name }}"
+        (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
+      ></ion-input>
+      <ion-select
+        #cardFormat
+        aria-label="selected format"
+        value="{{ card.format }}"
+        label-placement="floating"
+        fill="outline"
+        label="Card format"
+        (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
+      >
+        <ion-select-option value="EAN13" selected>EAN-13</ion-select-option>
+        <ion-select-option value="CODE39">CODE-39</ion-select-option>
+        <ion-select-option value="QRCODE">QR-CODE</ion-select-option>
+      </ion-select>
+    </div>
+    <div class="btn-container">
+      <ion-button color="danger" (click)="delete()">Delete</ion-button>
+      <ion-button
+        color="primary"
+        (click)="editCard(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
+        >Save</ion-button
+      >
+    </div>
+    }@else {
+    <div class="spinner-container">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+    }
   </div>
 </ion-content>

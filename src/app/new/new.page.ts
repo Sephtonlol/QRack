@@ -19,7 +19,8 @@ import { Card } from '../interfaces/card';
 
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
-
+import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-new',
   templateUrl: './new.page.html',
@@ -51,7 +52,15 @@ export class NewPage implements OnInit {
   };
   test: string = 'test';
 
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/home']);
+    });
+  }
 
   async startScan() {
     if (!this.html5QrCode) {
@@ -111,7 +120,7 @@ export class NewPage implements OnInit {
   }
 
   async addCard(name: string, number: string, format: string) {
-    this.card.name = name;
+    this.card.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     this.card.number = number;
     this.card.format = format;
     this.storageService.setCard(this.card);

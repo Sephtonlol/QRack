@@ -21,7 +21,7 @@ export class StorageService {
 
       const nextId = await this._storage.get(this.autoIncrementKey);
       if (nextId === null) {
-        await this._storage.set(this.autoIncrementKey, 0);
+        await this._storage.set(this.autoIncrementKey, 1);
       }
     }
   }
@@ -61,19 +61,19 @@ export class StorageService {
     return formattedCards;
   }
 
-  public async setCard(card: Card): Promise<void> {
+  public async setCard(card: Card, cardId?: number): Promise<void> {
     await this.ensureInitialized();
     if (!this._storage) {
       throw new Error('Storage is not initialized');
     }
-
-    const nextId = await this._storage.get(this.autoIncrementKey);
-    const cardId = nextId as number;
-    card.key = String(cardId);
-
+    console.log(cardId);
+    if (!cardId) {
+      const nextId = await this._storage.get(this.autoIncrementKey);
+      cardId = nextId as number;
+      card.key = String(cardId);
+      await this._storage.set(this.autoIncrementKey, cardId + 1);
+    }
     await this._storage.set(String(cardId), card);
-
-    await this._storage.set(this.autoIncrementKey, cardId + 1);
   }
 
   public async deleteCard(key: string): Promise<void> {

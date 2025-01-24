@@ -5,6 +5,10 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
@@ -14,6 +18,7 @@ import QRCode from 'qrcode';
 import { ActivatedRoute } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-card',
@@ -28,9 +33,14 @@ import { Router } from '@angular/router';
     CommonModule,
     FormsModule,
     IonButton,
+    IonSpinner,
+    IonInput,
+    IonSelect,
+    IonSelectOption,
   ],
 })
 export class CardPage implements OnInit {
+  loaded = false;
   card: Card = {
     name: '',
     number: '',
@@ -40,12 +50,15 @@ export class CardPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/home']);
+    });
+  }
 
   async ngOnInit() {
-    console.log('ionViewWillEnter');
-
     const id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {
@@ -53,16 +66,8 @@ export class CardPage implements OnInit {
     }
 
     const card = await this.storageService.getCard(id);
-
     if (card) {
-      this.card = card;
-      this.card.format = this.card.format ? this.card.format : 'EAN13';
-
-      if (this.card.format === 'QRCODE') {
-        this.generateQRCode();
-      } else {
-        this.generateBarcode();
-      }
+      this.generateImage(card);
     } else {
       throw new Error('Card not found');
     }
@@ -70,19 +75,22 @@ export class CardPage implements OnInit {
 
   private generateBarcode(): void {
     setTimeout(() => {
+      this.loaded = true;
       JsBarcode('#img', this.card.number, {
         format: this.card.format,
       });
-    }, 100);
+    }, 150);
   }
 
   private generateQRCode(): void {
     setTimeout(() => {
+      console.log('Generating QR Code');
+      this.loaded = true;
       const img = document.getElementById('img') as HTMLCanvasElement;
       QRCode.toCanvas(img, this.card.number, {
         errorCorrectionLevel: 'H',
       });
-    }, 100);
+    }, 150);
   }
 
   delete() {
@@ -91,5 +99,29 @@ export class CardPage implements OnInit {
     }
     this.storageService.deleteCard(this.card.key);
     this.router.navigate(['/home']);
+  }
+  editCard(name: string, number: string, format: string) {
+    this.card.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    this.card.number = number;
+    this.card.format = format;
+    this.storageService.setCard(this.card, Number(this.card.key));
+  }
+  generateImage(card: Card): void {
+    this.card = card;
+    this.card.format = this.card.format ? this.card.format : 'EAN13';
+
+    if (this.card.format === 'QRCODE') {
+      this.generateQRCode();
+    } else {
+      this.generateBarcode();
+    }
+  }
+  onInputChange(name: string, number: string, format: string) {
+    this.card = {
+      name: name,
+      number: number,
+      format: format,
+    };
+    this.generateImage(this.card);
   }
 }

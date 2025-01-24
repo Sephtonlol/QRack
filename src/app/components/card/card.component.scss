@@ -1,9 +1,9 @@
 :host {
   background-color: #1f1f1f;
-  height: 10rem;
+  height: 5rem;
   display: block;
-  margin: 1rem;
-  border-radius: 1rem;
+  margin: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 .text-container {
   display: flex;
@@ -15,9 +15,9 @@ a {
   text-decoration: none;
 }
 h1 {
+  margin: 0;
   font-size: xx-large;
-  font-family: myFirstFont;
+  font-family: condensed;
   color: white;
   font-weight: bolder;
-  text-transform: uppercase;
 }

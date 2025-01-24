@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -8,7 +8,8 @@ import {
 import { StorageService } from '../services/storage.service';
 import { Card } from '../interfaces/card';
 import { CardComponent } from '../components/card/card.component';
-
+import { Platform } from '@ionic/angular';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -16,7 +17,15 @@ import { CardComponent } from '../components/card/card.component';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, CardComponent],
 })
 export class HomePage {
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/home']);
+    });
+  }
   cards: Card[] = [];
 
   async ionViewWillEnter() {
