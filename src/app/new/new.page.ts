@@ -11,11 +11,12 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
+  IonRange,
 } from '@ionic/angular/standalone';
 
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 import { StorageService } from '../services/storage.service';
-import { Card } from '../interfaces/card';
+import { Card, color } from '../interfaces/card';
 
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
@@ -37,20 +38,10 @@ import { Router } from '@angular/router';
     IonInput,
     IonSelect,
     IonSelectOption,
+    IonRange,
   ],
 })
 export class NewPage implements OnInit {
-  @ViewChild('reader', { static: true }) reader!: ElementRef;
-  @ViewChild(IonModal) modal!: IonModal;
-  html5QrCode: Html5Qrcode | null = null;
-  isScanning: boolean = false;
-
-  card: Card = {
-    name: '',
-    number: '',
-    format: 'QRCODE',
-  };
-
   constructor(
     private router: Router,
     private storageService: StorageService,
@@ -59,6 +50,25 @@ export class NewPage implements OnInit {
     this.platform.backButton.subscribeWithPriority(10, () => {
       this.router.navigate(['/home']);
     });
+  }
+  @ViewChild('reader', { static: true }) reader!: ElementRef;
+  @ViewChild(IonModal) modal!: IonModal;
+  html5QrCode: Html5Qrcode | null = null;
+  isScanning: boolean = false;
+
+  color: color = {
+    red: 31,
+    green: 31,
+    blue: 31,
+  };
+  card: Card = {
+    name: '',
+    number: '',
+    format: 'QRCODE',
+    color: this.color,
+  };
+  get backgroundColor(): string {
+    return `rgb(${this.color.red}, ${this.color.green}, ${this.color.blue})`;
   }
 
   async startScan() {
@@ -123,11 +133,13 @@ export class NewPage implements OnInit {
     this.card.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     this.card.number = number;
     this.card.format = format;
+    this.card.color = this.color;
     await this.storageService.setCard(this.card);
     this.card = {
       name: '',
       number: '',
       format: this.card.format,
+      color: this.color,
     };
   }
 

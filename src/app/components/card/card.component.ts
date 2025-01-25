@@ -18,6 +18,8 @@ export class CardComponent implements OnInit {
   constructor() {
     addIcons({ reorderThreeOutline });
   }
-
+  get backgroundColor(): string {
+    return `rgb(${this.card.color.red}, ${this.card.color.green}, ${this.card.color.blue})`;
+  }
   ngOnInit() {}
 }

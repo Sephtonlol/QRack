@@ -1,4 +1,8 @@
-<a class="text-container" [routerLink]="['/card', card.key]">
+<a
+  class="text-container"
+  [routerLink]="['/card', card.key]"
+  [style.background]="backgroundColor"
+>
   <h1>{{ card.name }}</h1>
   <ion-reorder slot="end"
     ><ion-icon color="dark" size="large" name="reorder-three-outline"></ion-icon

@@ -7,13 +7,14 @@ import {
   IonContent,
   IonHeader,
   IonInput,
+  IonRange,
   IonSelect,
   IonSelectOption,
   IonSpinner,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { Card } from '../interfaces/card';
+import { Card, color } from '../interfaces/card';
 import JsBarcode from 'jsbarcode';
 import QRCode from 'qrcode';
 import { ActivatedRoute } from '@angular/router';
@@ -39,16 +40,23 @@ import { Platform } from '@ionic/angular';
     IonSelect,
     IonSelectOption,
     IonAlert,
+    IonRange,
   ],
 })
 export class CardPage implements OnInit {
   loaded = false;
   invalid = false;
   id!: number | null;
+  color: color = {
+    red: 31,
+    green: 31,
+    blue: 31,
+  };
   card: Card = {
     name: '',
     number: '',
     format: '',
+    color: this.color,
   };
 
   constructor(
@@ -82,7 +90,7 @@ export class CardPage implements OnInit {
       text: 'Cancel',
     },
     {
-      text: 'OK',
+      text: 'Confirm',
       handler: () => {
         this.delete();
       },
@@ -148,6 +156,7 @@ export class CardPage implements OnInit {
     this.card.number = number;
     this.card.format = format;
     this.card.key = this.id;
+    this.card.color = this.card.color;
     this.storageService.setCard(this.card, Number(this.id));
     this.router.navigate(['/home']);
   }
@@ -161,11 +170,17 @@ export class CardPage implements OnInit {
       this.generateBarcode();
     }
   }
+
+  get backgroundColor(): string {
+    return `rgb(${this.card.color.red}, ${this.card.color.green}, ${this.card.color.blue})`;
+  }
+
   onInputChange(name: string, number: string, format: string) {
     this.card = {
       name: name,
       number: number,
       format: format,
+      color: this.card.color,
     };
     this.generateImage(this.card);
   }
