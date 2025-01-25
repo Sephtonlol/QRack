@@ -31,7 +31,7 @@ export class HomePage {
     private platform: Platform
   ) {
     this.platform.backButton.subscribeWithPriority(10, () => {
-      App.exitApp();
+      App.minimizeApp();
     });
   }
   cards: Card[] = [];

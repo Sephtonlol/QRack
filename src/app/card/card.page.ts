@@ -194,5 +194,6 @@ export class CardPage implements OnInit {
       throw new Error('Card not found');
     }
     this.card = card;
+    this.generateImage(this.card);
   }
 }

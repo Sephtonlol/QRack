@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     if (url.includes('card')) {
       ScreenBrightness.setBrightness({ brightness: 1 });
     } else {
-      ScreenBrightness.setBrightness({ brightness: 0.5 });
+      ScreenBrightness.setBrightness({ brightness: -1 });
     }
   }
 }

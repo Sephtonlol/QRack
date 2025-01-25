@@ -10,7 +10,11 @@
       @if(invalid){
       <h1>Invalid number/format</h1>
       }
-      <div class="color" [style.background]="backgroundColor">
+      <div
+        class="color"
+        [class.loaded-container]="!invalid"
+        [style.background]="backgroundColor"
+      >
         <canvas id="img" class="code" [class.loaded]="!invalid"></canvas>
       </div>
     </div>
