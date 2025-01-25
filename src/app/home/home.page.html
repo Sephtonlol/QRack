@@ -6,8 +6,17 @@
 
 <ion-content [fullscreen]="true">
   <div class="cards">
-    @for(card of this.cards; track card){
-    <app-card [card]="card" />
-    }
+    <ion-reorder-group
+      [disabled]="false"
+      (ionItemReorder)="handleReorder($any($event))"
+    >
+      @for(card of this.cards; track card){
+      <app-card [card]="card" />
+      }
+    </ion-reorder-group>
+    <div class="text-container" [class.noCards]="cards.length < 1">
+      <h1>No cards in QRack</h1>
+      <h1 class="quote">Loyalty unclaimed is savings lost</h1>
+    </div>
   </div>
 </ion-content>

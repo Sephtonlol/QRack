@@ -40,3 +40,9 @@
   font-family: condensed;
   src: url(./app/fonts/condensed.ttf);
 }
+h1,
+ion-title {
+  margin: 0.2rem;
+  font-family: condensed;
+  font-weight: bold;
+}

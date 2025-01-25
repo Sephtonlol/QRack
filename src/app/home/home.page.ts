@@ -4,6 +4,8 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonReorderGroup,
+  ItemReorderEventDetail,
 } from '@ionic/angular/standalone';
 import { StorageService } from '../services/storage.service';
 import { Card } from '../interfaces/card';
@@ -14,7 +16,14 @@ import { App } from '@capacitor/app';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, CardComponent],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    CardComponent,
+    IonReorderGroup,
+  ],
 })
 export class HomePage {
   constructor(
@@ -26,6 +35,17 @@ export class HomePage {
     });
   }
   cards: Card[] = [];
+
+  async handleReorder(event: CustomEvent<ItemReorderEventDetail>) {
+    this.cards = event.detail.complete(this.cards);
+    await this.storageService.delete();
+    let id = 1;
+    for (const card of this.cards) {
+      id++;
+      card.key = id.toString();
+      await this.storageService.setCard(card);
+    }
+  }
 
   async ionViewWillEnter() {
     this.cards = await this.storageService.getCards();

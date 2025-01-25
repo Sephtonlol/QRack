@@ -1,13 +1,17 @@
+.code {
+  display: none;
+}
 .card {
-  opacity: 0;
+  display: none;
   margin-top: 1rem;
 }
 canvas {
-  border-radius: 0.5rem;
   max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
 }
 .loaded {
-  opacity: 1;
+  display: block;
 }
 .spinner-container {
   margin-top: 20vh;

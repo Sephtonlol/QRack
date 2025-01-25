@@ -66,7 +66,6 @@ export class StorageService {
     if (!this._storage) {
       throw new Error('Storage is not initialized');
     }
-    console.log(cardId);
     if (!cardId) {
       const nextId = await this._storage.get(this.autoIncrementKey);
       cardId = nextId as number;
@@ -75,13 +74,16 @@ export class StorageService {
     }
     await this._storage.set(String(cardId), card);
   }
-
-  public async deleteCard(key: string): Promise<void> {
+  public async delete(key?: string): Promise<void> {
     await this.ensureInitialized();
     if (!this._storage) {
       throw new Error('Storage is not initialized');
     }
-
+    if (!key) {
+      await this._storage.clear();
+      await this._storage.set(this.autoIncrementKey, 1);
+      return;
+    }
     await this._storage.remove(key);
   }
 }

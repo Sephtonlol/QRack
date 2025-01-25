@@ -42,8 +42,9 @@ import { Platform } from '@ionic/angular';
   ],
 })
 export class CardPage implements OnInit {
-  deleteAlert = false;
   loaded = false;
+  invalid = false;
+  id!: string | null;
   card: Card = {
     name: '',
     number: '',
@@ -62,13 +63,13 @@ export class CardPage implements OnInit {
   }
 
   async ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id');
 
-    if (!id) {
+    if (!this.id) {
       throw new Error('No ID provided');
     }
 
-    const card = await this.storageService.getCard(id);
+    const card = await this.storageService.getCard(this.id);
     if (card) {
       this.generateImage(card);
     } else {
@@ -91,35 +92,64 @@ export class CardPage implements OnInit {
   private generateBarcode(): void {
     setTimeout(() => {
       this.loaded = true;
-      JsBarcode('#img', this.card.number, {
-        format: this.card.format,
-      });
+      try {
+        if (this.card.number.length == 0) {
+          this.invalid = true;
+          console.error('No number provided');
+        } else {
+          JsBarcode('#img', this.card.number, {
+            format: this.card.format,
+            displayValue: false,
+            height: this.card.number.length * 5 + 60,
+          });
+          this.invalid = false;
+        }
+      } catch (error) {
+        this.invalid = true;
+        console.error('Error generating barcode:', error);
+      }
     }, 150);
   }
 
   private generateQRCode(): void {
     setTimeout(() => {
-      console.log('Generating QR Code');
       this.loaded = true;
-      const img = document.getElementById('img') as HTMLCanvasElement;
-      QRCode.toCanvas(img, this.card.number, {
-        errorCorrectionLevel: 'H',
-      });
+      try {
+        const img = document.getElementById('img') as HTMLCanvasElement;
+        if (this.card.number.length == 0) {
+          this.invalid = true;
+          console.error('No number provided');
+        } else {
+          QRCode.toCanvas(img, this.card.number, {
+            errorCorrectionLevel: 'H',
+            scale: 10,
+          });
+          this.invalid = false;
+        }
+      } catch (error) {
+        this.invalid = true;
+        console.error('Error generating qrcode:', error);
+      }
     }, 150);
   }
 
   delete() {
-    if (!this.card.key) {
+    if (!this.id) {
       throw new Error('No key provided');
     }
-    this.storageService.deleteCard(this.card.key);
+    this.storageService.delete(this.id);
     this.router.navigate(['/home']);
   }
   editCard(name: string, number: string, format: string) {
+    if (!this.id) {
+      throw new Error('No key provided');
+    }
     this.card.name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
     this.card.number = number;
     this.card.format = format;
-    this.storageService.setCard(this.card, Number(this.card.key));
+    this.card.key = this.id;
+    this.storageService.setCard(this.card, Number(this.id));
+    this.router.navigate(['/home']);
   }
   generateImage(card: Card): void {
     this.card = card;
