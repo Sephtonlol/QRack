@@ -21,6 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
+import { logoPaypal } from 'ionicons/icons';
 
 @Component({
   selector: 'app-card',
@@ -183,5 +184,15 @@ export class CardPage implements OnInit {
       color: this.card.color,
     };
     this.generateImage(this.card);
+  }
+  async ionViewWillLeave() {
+    if (!this.id) {
+      throw new Error('Id not found');
+    }
+    const card = await this.storageService.getCard(this.id);
+    if (!card) {
+      throw new Error('Card not found');
+    }
+    this.card = card;
   }
 }
