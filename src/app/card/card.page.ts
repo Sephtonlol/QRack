@@ -44,7 +44,7 @@ import { Platform } from '@ionic/angular';
 export class CardPage implements OnInit {
   loaded = false;
   invalid = false;
-  id!: string | null;
+  id!: number | null;
   card: Card = {
     name: '',
     number: '',
@@ -63,7 +63,7 @@ export class CardPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!this.id) {
       throw new Error('No ID provided');

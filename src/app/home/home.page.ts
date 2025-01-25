@@ -42,7 +42,7 @@ export class HomePage {
     let id = 1;
     for (const card of this.cards) {
       id++;
-      card.key = id.toString();
+      card.key = id;
       await this.storageService.setCard(card);
     }
   }
