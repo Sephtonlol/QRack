@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -18,6 +12,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonRange,
+  IonToast,
 } from '@ionic/angular/standalone';
 
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
@@ -27,7 +22,6 @@ import { Card, color } from '../interfaces/card';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
 import { Subscription } from 'rxjs';
-import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-new',
   templateUrl: './new.page.html',
@@ -45,19 +39,19 @@ import { ToastService } from '../toast.service';
     IonSelect,
     IonSelectOption,
     IonRange,
+    IonToast,
   ],
 })
 export class NewPage implements OnInit {
-  constructor(
-    private storageService: StorageService,
-    private toastService: ToastService
-  ) {}
+  constructor(private storageService: StorageService) {}
   @ViewChild('reader', { static: true }) reader!: ElementRef;
   @ViewChild(IonModal) modal!: IonModal;
 
   backButtonSubscription!: Subscription;
   html5QrCode: Html5Qrcode | null = null;
   isScanning: boolean = false;
+  toastOpen: boolean = false;
+  toastMsg: string = '';
 
   color: color = {
     red: 31,
@@ -114,13 +108,8 @@ export class NewPage implements OnInit {
             this.card.number = decodedText;
             this.card.format =
               decodedResult.result.format?.toString().replace(/_/g, '') || '';
-            console.log(this.card.format);
-
-            await this.toastService.showToast(
-              this.card.format + ' completed successfully!',
-              'success'
-            );
             this.stopScan();
+            this.showToast('Card Scanned');
           },
           (errorMessage) => {}
         );
@@ -144,21 +133,25 @@ export class NewPage implements OnInit {
     this.card.format = format;
     this.card.color = this.color;
     await this.storageService.setCard(this.card);
+    this.showToast('Saved card as ' + this.card.name);
     this.card = {
       name: '',
       number: '',
       format: this.card.format,
       color: this.color,
     };
-    await this.toastService.showToast(
-      'Action completed successfully!',
-      'success'
-    );
   }
+  showToast(msg: string) {
+    this.toastMsg = msg;
+    this.toastOpen = true;
 
+    setTimeout(() => {
+      this.toastOpen = false;
+    }, 1500);
+  }
   async ngOnInit() {
     if (Capacitor.getPlatform() !== 'web') {
-      const status = await Camera.requestPermissions();
+      await Camera.requestPermissions();
     }
   }
 }

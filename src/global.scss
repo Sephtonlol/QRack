@@ -41,10 +41,16 @@
   src: url(./app/fonts/condensed.ttf);
 }
 h1,
+.toast-text,
 ion-title {
   margin: 0.2rem;
   font-family: condensed;
   font-weight: bold;
+}
+.toast-text {
+  color: white;
+  font-size: large;
+  text-align: center;
 }
 .spinner-container {
   margin-top: 40vh;

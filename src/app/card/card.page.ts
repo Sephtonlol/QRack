@@ -53,6 +53,10 @@ export class CardPage implements OnInit {
   loaded = false;
   invalid = false;
   id!: number | null;
+  toastOpen: boolean = false;
+  toastMsg: string = '';
+  toastColor: 'primary' | 'danger' = 'primary';
+
   color: color = {
     red: 31,
     green: 31,

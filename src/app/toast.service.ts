@@ -5,19 +5,34 @@ import { ToastController } from '@ionic/angular';
   providedIn: 'root',
 })
 export class ToastService {
+  private activeToast: HTMLIonToastElement | null = null;
+
   constructor(private toastController: ToastController) {}
 
   async showToast(
     message: string,
-    color: string = 'primary',
+    color: string = 'success',
     duration: number = 1500
   ) {
-    const toast = await this.toastController.create({
+    // Dismiss any active toast before showing a new one
+    if (this.activeToast) {
+      await this.activeToast.dismiss();
+    }
+
+    this.activeToast = await this.toastController.create({
       message,
       duration,
       color,
       position: 'top',
+      cssClass: 'toast-text',
     });
-    await toast.present();
+
+    // Present the toast
+    await this.activeToast.present();
+
+    // Reset `activeToast` once it's dismissed
+    this.activeToast.onDidDismiss().then(() => {
+      this.activeToast = null;
+    });
   }
 }
