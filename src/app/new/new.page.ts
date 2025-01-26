@@ -12,7 +12,6 @@ import {
   IonSelect,
   IonSelectOption,
   IonRange,
-  IonToast,
 } from '@ionic/angular/standalone';
 
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
@@ -39,7 +38,6 @@ import { Subscription } from 'rxjs';
     IonSelect,
     IonSelectOption,
     IonRange,
-    IonToast,
   ],
 })
 export class NewPage implements OnInit {
@@ -50,8 +48,6 @@ export class NewPage implements OnInit {
   backButtonSubscription!: Subscription;
   html5QrCode: Html5Qrcode | null = null;
   isScanning: boolean = false;
-  toastOpen: boolean = false;
-  toastMsg: string = '';
 
   color: color = {
     red: 31,
@@ -109,7 +105,6 @@ export class NewPage implements OnInit {
             this.card.format =
               decodedResult.result.format?.toString().replace(/_/g, '') || '';
             this.stopScan();
-            this.showToast('Card Scanned');
           },
           (errorMessage) => {}
         );
@@ -133,21 +128,12 @@ export class NewPage implements OnInit {
     this.card.format = format;
     this.card.color = this.color;
     await this.storageService.setCard(this.card);
-    this.showToast('Saved card as ' + this.card.name);
     this.card = {
       name: '',
       number: '',
       format: this.card.format,
       color: this.color,
     };
-  }
-  showToast(msg: string) {
-    this.toastMsg = msg;
-    this.toastOpen = true;
-
-    setTimeout(() => {
-      this.toastOpen = false;
-    }, 1500);
   }
   async ngOnInit() {
     if (Capacitor.getPlatform() !== 'web') {
