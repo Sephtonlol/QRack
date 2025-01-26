@@ -59,37 +59,34 @@
     </div>
     <div class="color-container">
       <div class="color-select">
-        <label><h1>R</h1></label>
+        <label><h1>R {{card.color.red}}</h1></label>
         <ion-range
           aria-label="color red"
           [min]="0"
           [max]="255"
           [value]="255"
-          [pin]="true"
           color="danger"
           [(ngModel)]="card.color.red"
         ></ion-range>
       </div>
       <div class="color-select">
-        <label><h1>G</h1></label>
+        <label><h1>G {{card.color.green}}</h1></label>
         <ion-range
           aria-label="color green"
           [min]="0"
           [max]="255"
           [value]="255"
-          [pin]="true"
           color="success"
           [(ngModel)]="card.color.green"
         ></ion-range>
       </div>
       <div class="color-select">
-        <label><h1>B</h1></label>
+        <label><h1>B {{card.color.blue}}</h1></label>
         <ion-range
           aria-label="color blue"
           [min]="0"
           [max]="255"
           [value]="255"
-          [pin]="true"
           [(ngModel)]="card.color.blue"
         ></ion-range>
       </div>
