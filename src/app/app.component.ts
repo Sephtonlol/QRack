@@ -14,25 +14,42 @@ import { App } from '@capacitor/app';
   imports: [IonApp, IonRouterOutlet, NavigationComponent],
 })
 export class AppComponent implements OnInit {
+  private navigationStack: string[] = [];
+
   constructor(private router: Router, private platform: Platform) {
     this.platform.backButton.subscribeWithPriority(1, () => {
-      if (this.router.url === '/home') {
-        App.minimizeApp();
+      if (this.navigationStack.length > 1) {
+        this.navigationStack.pop();
+        const lastPage = this.navigationStack[this.navigationStack.length - 1];
+        this.router.navigate([lastPage]).then(() => {});
       } else {
-        this.router.navigate(['/home']);
+        App.minimizeApp();
       }
     });
   }
+
   async ngOnInit(): Promise<void> {
     if (Capacitor.getPlatform() !== 'web') {
       this.router.events
         .pipe(filter((event) => event instanceof NavigationEnd))
         .subscribe((event: NavigationEnd) => {
+          this.updateNavigationStack(event.urlAfterRedirects);
           this.onRouteChange(event.urlAfterRedirects);
         });
+
       await ScreenOrientation.lock({ orientation: 'portrait' });
     }
   }
+
+  updateNavigationStack(url: string) {
+    if (
+      this.navigationStack.length === 0 ||
+      this.navigationStack[this.navigationStack.length - 1] !== url
+    ) {
+      this.navigationStack.push(url);
+    }
+  }
+
   onRouteChange(url: string) {
     console.log('Router changed to:', url);
     if (url.includes('card')) {
