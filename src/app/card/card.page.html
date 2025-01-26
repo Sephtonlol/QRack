@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [class.header-invisible]="!headerVisible">
   <ion-toolbar>
     <ion-title>{{card.name}}</ion-title>
   </ion-toolbar>
@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true">
   <div class="container">
-    <div class="card" [class.loaded]="loaded">
+    <div class="card" [class.loaded]="loaded" (click)="toggleHeader()">
       @if(invalid){
       <h1>Invalid number/format</h1>
       }

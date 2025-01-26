@@ -49,12 +49,11 @@ export class CardPage implements OnInit {
     private storageService: StorageService,
     private router: Router
   ) {}
+  headerVisible: boolean = true;
   backButtonSubscription!: Subscription;
   loaded = false;
   invalid = false;
   id!: number | null;
-  toastOpen: boolean = false;
-  toastMsg: string = '';
   toastColor: 'primary' | 'danger' = 'primary';
 
   color: color = {
@@ -178,6 +177,10 @@ export class CardPage implements OnInit {
       color: this.card.color,
     };
     this.generateImage(this.card);
+  }
+  toggleHeader() {
+    this.headerVisible = !this.headerVisible;
+    console.log(this.headerVisible);
   }
   async ionViewWillEnter() {
     if (!this.id) {
