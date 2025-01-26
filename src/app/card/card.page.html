@@ -15,7 +15,12 @@
         [class.loaded-container]="!invalid"
         [style.background]="backgroundColor"
       >
-        <canvas id="img" class="code" [class.loaded]="!invalid"></canvas>
+        <canvas
+          id="img"
+          class="code"
+          [class.loaded]="!invalid"
+          [class.qrcode]="card.format == 'QRCODE'"
+        ></canvas>
       </div>
     </div>
 
