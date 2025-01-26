@@ -20,8 +20,7 @@ import QRCode from 'qrcode';
 import { ActivatedRoute } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { logoPaypal } from 'ionicons/icons';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-card',
@@ -45,6 +44,12 @@ import { logoPaypal } from 'ionicons/icons';
   ],
 })
 export class CardPage implements OnInit {
+  constructor(
+    private route: ActivatedRoute,
+    private storageService: StorageService,
+    private router: Router
+  ) {}
+  backButtonSubscription!: Subscription;
   loaded = false;
   invalid = false;
   id!: number | null;
@@ -59,17 +64,6 @@ export class CardPage implements OnInit {
     format: '',
     color: this.color,
   };
-
-  constructor(
-    private route: ActivatedRoute,
-    private storageService: StorageService,
-    private router: Router,
-    private platform: Platform
-  ) {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/home']);
-    });
-  }
 
   async ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -185,7 +179,7 @@ export class CardPage implements OnInit {
     };
     this.generateImage(this.card);
   }
-  async ionViewWillLeave() {
+  async ionViewWillEnter() {
     if (!this.id) {
       throw new Error('Id not found');
     }

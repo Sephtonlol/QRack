@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,8 +26,7 @@ import { Card, color } from '../interfaces/card';
 
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
-import { Platform } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-new',
   templateUrl: './new.page.html',
@@ -42,17 +47,11 @@ import { Router } from '@angular/router';
   ],
 })
 export class NewPage implements OnInit {
-  constructor(
-    private router: Router,
-    private storageService: StorageService,
-    private platform: Platform
-  ) {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/home']);
-    });
-  }
+  constructor(private storageService: StorageService) {}
   @ViewChild('reader', { static: true }) reader!: ElementRef;
   @ViewChild(IonModal) modal!: IonModal;
+
+  backButtonSubscription!: Subscription;
   html5QrCode: Html5Qrcode | null = null;
   isScanning: boolean = false;
 
