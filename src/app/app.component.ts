@@ -18,6 +18,9 @@ export class AppComponent implements OnInit {
 
   constructor(private router: Router, private platform: Platform) {
     this.platform.backButton.subscribeWithPriority(1, () => {
+      if (this.router.url === '/home') {
+        this.navigationStack = [];
+      }
       if (this.navigationStack.length > 1) {
         this.navigationStack.pop();
         const lastPage = this.navigationStack[this.navigationStack.length - 1];
