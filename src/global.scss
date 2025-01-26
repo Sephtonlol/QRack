@@ -51,3 +51,17 @@ ion-title {
   display: flex;
   justify-content: center;
 }
+ion-input.ng-valid {
+  --highlight-color-focused: none;
+}
+ion-input.ng-valid,
+ion-input.ng-touched,
+ion-input.ng-dirty {
+  --border-color: var(--ion-border-color, transparent);
+}
+
+ion-input.ng-valid,
+ion-select.ng-valid {
+  --highlight-color-valid: var(--ion-color-primary);
+  --highlight-color: var(--ion-color-primary);
+}

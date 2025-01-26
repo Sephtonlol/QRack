@@ -32,6 +32,7 @@
         label-placement="floating"
         fill="outline"
         value="{{ card.number }}"
+        [(ngModel)]="card.number"
         (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
       ></ion-input>
       <ion-input
@@ -39,13 +40,13 @@
         label="Card name"
         label-placement="floating"
         fill="outline"
-        value="{{ card.name }}"
+        [(ngModel)]="card.name"
         (ionChange)="onInputChange(cardName.value?.toString() || '', cardNumber.value?.toString() || '', cardFormat.value?.toString() || '')"
       ></ion-input>
       <ion-select
         #cardFormat
         aria-label="selected format"
-        value="{{ card.format }}"
+        [(ngModel)]="card.format"
         label-placement="floating"
         fill="outline"
         label="Card format"
@@ -64,7 +65,6 @@
           aria-label="color red"
           [min]="0"
           [max]="255"
-          [value]="255"
           color="danger"
           [(ngModel)]="card.color.red"
         ></ion-range>
@@ -75,7 +75,6 @@
           aria-label="color green"
           [min]="0"
           [max]="255"
-          [value]="255"
           color="success"
           [(ngModel)]="card.color.green"
         ></ion-range>
@@ -86,7 +85,6 @@
           aria-label="color blue"
           [min]="0"
           [max]="255"
-          [value]="255"
           [(ngModel)]="card.color.blue"
         ></ion-range>
       </div>

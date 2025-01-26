@@ -12,22 +12,22 @@
       label="Card code"
       label-placement="floating"
       fill="outline"
-      value="{{ card.number }}"
+      [(ngModel)]="card.number"
     ></ion-input>
     <ion-input
       #cardName
       label="Card name"
       label-placement="floating"
       fill="outline"
-      value="{{ card.name }}"
+      [(ngModel)]="card.name"
     ></ion-input>
     <ion-select
       #cardFormat
       aria-label="selected format"
-      value="{{ card.format }}"
       label-placement="floating"
       fill="outline"
       label="Card format"
+      [(ngModel)]="card.format"
     >
       <ion-select-option value="QRCODE">QR-CODE</ion-select-option>
       <ion-select-option value="EAN13">EAN-13</ion-select-option>
@@ -41,7 +41,6 @@
           aria-label="color red"
           [min]="0"
           [max]="255"
-          [value]="255"
           color="danger"
           [(ngModel)]="color.red"
         ></ion-range>
@@ -52,7 +51,6 @@
           aria-label="color green"
           [min]="0"
           [max]="255"
-          [value]="255"
           color="success"
           [(ngModel)]="color.green"
         ></ion-range>
@@ -63,7 +61,6 @@
           aria-label="color blue"
           [min]="0"
           [max]="255"
-          [value]="255"
           [(ngModel)]="color.blue"
         ></ion-range>
       </div>

@@ -27,6 +27,7 @@ import { Card, color } from '../interfaces/card';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
 import { Subscription } from 'rxjs';
+import { ToastService } from '../toast.service';
 @Component({
   selector: 'app-new',
   templateUrl: './new.page.html',
@@ -47,7 +48,10 @@ import { Subscription } from 'rxjs';
   ],
 })
 export class NewPage implements OnInit {
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private toastService: ToastService
+  ) {}
   @ViewChild('reader', { static: true }) reader!: ElementRef;
   @ViewChild(IonModal) modal!: IonModal;
 
@@ -63,7 +67,7 @@ export class NewPage implements OnInit {
   card: Card = {
     name: '',
     number: '',
-    format: 'QRCODE',
+    format: 'EAN13',
     color: this.color,
   };
   get backgroundColor(): string {
@@ -102,7 +106,7 @@ export class NewPage implements OnInit {
         await this.html5QrCode.start(
           { deviceId: { exact: cameraId } },
           {
-            fps: 20,
+            fps: 30,
             qrbox: { width: 200, height: 200 },
             aspectRatio: 1 / 1,
           },
@@ -110,6 +114,12 @@ export class NewPage implements OnInit {
             this.card.number = decodedText;
             this.card.format =
               decodedResult.result.format?.toString().replace(/_/g, '') || '';
+            console.log(this.card.format);
+
+            await this.toastService.showToast(
+              this.card.format + ' completed successfully!',
+              'success'
+            );
             this.stopScan();
           },
           (errorMessage) => {}
@@ -140,6 +150,10 @@ export class NewPage implements OnInit {
       format: this.card.format,
       color: this.color,
     };
+    await this.toastService.showToast(
+      'Action completed successfully!',
+      'success'
+    );
   }
 
   async ngOnInit() {
