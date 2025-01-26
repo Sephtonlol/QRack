@@ -5,6 +5,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  @if(loaded){
+
   <div class="cards">
     <ion-reorder-group
       [disabled]="false"
@@ -19,4 +21,9 @@
       <h1 class="quote">Loyalty unclaimed is savings lost</h1>
     </div>
   </div>
+  } @else {
+  <div class="spinner-container">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  }
 </ion-content>

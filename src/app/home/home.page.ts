@@ -6,6 +6,7 @@ import {
   IonContent,
   IonReorderGroup,
   ItemReorderEventDetail,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { StorageService } from '../services/storage.service';
 import { Card } from '../interfaces/card';
@@ -22,10 +23,12 @@ import { CardComponent } from '../components/card/card.component';
     IonContent,
     CardComponent,
     IonReorderGroup,
+    IonSpinner,
   ],
 })
 export class HomePage {
   constructor(private storageService: StorageService) {}
+  loaded = false;
   cards: Card[] = [];
 
   async handleReorder(event: CustomEvent<ItemReorderEventDetail>) {
@@ -41,5 +44,6 @@ export class HomePage {
 
   async ionViewWillEnter() {
     this.cards = await this.storageService.getCards();
+    this.loaded = true;
   }
 }

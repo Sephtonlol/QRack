@@ -93,47 +93,43 @@ export class CardPage implements OnInit {
   ];
 
   private generateBarcode(): void {
-    setTimeout(() => {
-      this.loaded = true;
-      try {
-        if (this.card.number.length == 0) {
-          this.invalid = true;
-          console.error('No number provided');
-        } else {
-          JsBarcode('#img', this.card.number, {
-            format: this.card.format,
-            displayValue: false,
-            height: this.card.number.length * 5 + 60,
-          });
-          this.invalid = false;
-        }
-      } catch (error) {
+    this.loaded = true;
+    try {
+      if (this.card.number.length == 0) {
         this.invalid = true;
-        console.error('Error generating barcode:', error);
+        console.error('No number provided');
+      } else {
+        JsBarcode('#img', this.card.number, {
+          format: this.card.format,
+          displayValue: false,
+          height: this.card.number.length * 5 + 60,
+        });
+        this.invalid = false;
       }
-    }, 150);
+    } catch (error) {
+      this.invalid = true;
+      console.error('Error generating barcode:', error);
+    }
   }
 
   private generateQRCode(): void {
-    setTimeout(() => {
-      this.loaded = true;
-      try {
-        const img = document.getElementById('img') as HTMLCanvasElement;
-        if (this.card.number.length == 0) {
-          this.invalid = true;
-          console.error('No number provided');
-        } else {
-          QRCode.toCanvas(img, this.card.number, {
-            errorCorrectionLevel: 'H',
-            scale: 10,
-          });
-          this.invalid = false;
-        }
-      } catch (error) {
+    this.loaded = true;
+    try {
+      const img = document.getElementById('img') as HTMLCanvasElement;
+      if (this.card.number.length == 0) {
         this.invalid = true;
-        console.error('Error generating qrcode:', error);
+        console.error('No number provided');
+      } else {
+        QRCode.toCanvas(img, this.card.number, {
+          errorCorrectionLevel: 'H',
+          scale: 10,
+        });
+        this.invalid = false;
       }
-    }, 150);
+    } catch (error) {
+      this.invalid = true;
+      console.error('Error generating qrcode:', error);
+    }
   }
 
   delete() {
