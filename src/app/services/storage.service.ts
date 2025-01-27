@@ -90,12 +90,12 @@ export class StorageService {
   public async reorder(cards: Card[]): Promise<Card[]> {
     await this.delete();
     let id = 1;
-    cards.reverse();
+    cards;
     for (const card of cards) {
       id++;
       card.key = id;
       await this.setCard(card);
     }
-    return cards.reverse();
+    return cards;
   }
 }
