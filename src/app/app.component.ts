@@ -4,8 +4,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { ScreenBrightness } from '@capacitor-community/screen-brightness';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { Capacitor } from '@capacitor/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { App } from '@capacitor/app';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,11 @@ export class AppComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (Capacitor.getPlatform() !== 'web') {
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          this.onRouteChange(event.urlAfterRedirects);
+        });
       await ScreenOrientation.lock({ orientation: 'portrait' });
     }
   }
