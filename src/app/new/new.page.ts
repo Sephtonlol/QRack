@@ -57,7 +57,7 @@ export class NewPage implements OnInit {
   card: Card = {
     name: '',
     number: '',
-    format: 'EAN13',
+    format: 'QRCODE',
     color: this.color,
   };
   get backgroundColor(): string {

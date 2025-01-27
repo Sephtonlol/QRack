@@ -134,11 +134,13 @@ export class CardPage implements OnInit {
     }
   }
 
-  delete() {
+  async delete() {
     if (!this.id) {
       throw new Error('No key provided');
     }
     this.storageService.delete(this.id);
+    const cards = await this.storageService.getCards();
+    await this.storageService.reorder(cards);
     this.router.navigate(['/home']);
   }
   editCard(name: string, number: string, format: string) {

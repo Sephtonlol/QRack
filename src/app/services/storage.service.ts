@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Card } from '../interfaces/card';
+import { ItemReorderEventDetail } from '@ionic/angular/standalone';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Card } from '../interfaces/card';
 export class StorageService {
   private _storage: Storage | null = null;
   private isInitialized = false;
-  private readonly autoIncrementKey = '__nextId'; // Key to track auto-increment ID
+  private readonly autoIncrementKey = '__nextId';
 
   constructor(private storage: Storage) {
     this.init();
@@ -85,5 +86,16 @@ export class StorageService {
       return;
     }
     await this._storage.remove(key.toString());
+  }
+  public async reorder(cards: Card[]): Promise<Card[]> {
+    await this.delete();
+    let id = 1;
+    cards.reverse();
+    for (const card of cards) {
+      id++;
+      card.key = id;
+      await this.setCard(card);
+    }
+    return cards.reverse();
   }
 }

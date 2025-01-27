@@ -4,8 +4,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { ScreenBrightness } from '@capacitor-community/screen-brightness';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { Capacitor } from '@capacitor/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { App } from '@capacitor/app';
 
 @Component({
@@ -14,42 +13,16 @@ import { App } from '@capacitor/app';
   imports: [IonApp, IonRouterOutlet, NavigationComponent],
 })
 export class AppComponent implements OnInit {
-  private navigationStack: string[] = [];
-
   constructor(private router: Router, private platform: Platform) {
     this.platform.backButton.subscribeWithPriority(1, () => {
-      if (this.router.url === '/home') {
-        this.navigationStack = [];
-      }
-      if (this.navigationStack.length > 1) {
-        this.navigationStack.pop();
-        const lastPage = this.navigationStack[this.navigationStack.length - 1];
-        this.router.navigate([lastPage]).then(() => {});
-      } else {
-        App.minimizeApp();
-      }
+      if (this.router.url === '/home') App.minimizeApp();
+      else this.router.navigate(['/home']);
     });
   }
 
   async ngOnInit(): Promise<void> {
     if (Capacitor.getPlatform() !== 'web') {
-      this.router.events
-        .pipe(filter((event) => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-          this.updateNavigationStack(event.urlAfterRedirects);
-          this.onRouteChange(event.urlAfterRedirects);
-        });
-
       await ScreenOrientation.lock({ orientation: 'portrait' });
-    }
-  }
-
-  updateNavigationStack(url: string) {
-    if (
-      this.navigationStack.length === 0 ||
-      this.navigationStack[this.navigationStack.length - 1] !== url
-    ) {
-      this.navigationStack.push(url);
     }
   }
 

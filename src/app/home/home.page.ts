@@ -29,21 +29,19 @@ import { CardComponent } from '../components/card/card.component';
 export class HomePage {
   constructor(private storageService: StorageService) {}
   loaded = false;
-  cards: Card[] = [];
+  cards!: Card[];
 
   async handleReorder(event: CustomEvent<ItemReorderEventDetail>) {
+    this.loaded = false;
     this.cards = event.detail.complete(this.cards);
-    await this.storageService.delete();
-    let id = 1;
-    for (const card of this.cards) {
-      id++;
-      card.key = id;
-      await this.storageService.setCard(card);
-    }
+    this.cards = await this.storageService.reorder(this.cards);
+    this.loaded = true;
   }
 
   async ionViewWillEnter() {
+    this.loaded = false;
     this.cards = await this.storageService.getCards();
+    this.cards.reverse();
     this.loaded = true;
   }
 }

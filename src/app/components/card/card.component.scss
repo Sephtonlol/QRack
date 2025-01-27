@@ -21,4 +21,7 @@ h1 {
   font-family: condensed;
   color: white;
   font-weight: bolder;
+  width: calc(100% - 32px);
+  white-space: nowrap;
+  overflow: scroll;
 }
